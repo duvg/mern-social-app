@@ -13,7 +13,7 @@ const signin = async (user) => {
   } catch (err) {
     console.log('Err:::', err);
   }
-}
+};
 
 const signout = async () => {
   try {
@@ -22,6 +22,6 @@ const signout = async () => {
   } catch (err) {
     console.log('Err:::', err);
   }
-}
+};
 
 export { signin, signout };

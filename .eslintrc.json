@@ -1,0 +1,36 @@
+{
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "parser": "@babel/eslint-parser",
+      "experimentalObjectRestSpread": true,
+      "jsx": true
+    }
+  },
+  "env": {
+    "node": true,
+    "browser": true,
+    "es6": true
+  },
+  "plugins": [
+    "prettier",
+    "react"
+  ],
+  "rules": {
+    "quotes": [
+      2, "single"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "comma-dangle": 0,
+    "react/jsx-uses-vars": 1,
+    "react/display-name": 1,
+    "no-unused-vars": "warn",
+    "no-console": 1,
+    "no-unexpected-multiline": "warn"
+  }
+}

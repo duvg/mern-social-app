@@ -1,31 +1,34 @@
-import User from '../models/user.model'
-import jwt from 'jsonwebtoken'
-import {expressjwt} from 'express-jwt'
-import config from './../../config/config'
+import User from '../models/user.model';
+import jwt from 'jsonwebtoken';
+import { expressjwt } from 'express-jwt';
+import config from './../../config/config';
 
 const signin = async (req, res) => {
   try {
     let user = await User.findOne({
-      "email": req.body.email
-    })
+      email: req.body.email
+    });
     if (!user)
       return res.status(401).json({
-        error: "User not found"
-      })
+        error: 'User not found'
+      });
 
     if (!user.authenticate(req.body.password)) {
       return res.status(401).send({
-        error: "Email and password don't match."
-      })
+        error: 'Email and password dont match.'
+      });
     }
 
-    const token = jwt.sign({
-      _id: user._id
-    }, config.jwtSecret)
+    const token = jwt.sign(
+      {
+        _id: user._id
+      },
+      config.jwtSecret
+    );
 
-    res.cookie("t", token, {
+    res.cookie('t', token, {
       expire: new Date() + 9999
-    })
+    });
 
     return res.json({
       token,
@@ -34,44 +37,41 @@ const signin = async (req, res) => {
         name: user.name,
         email: user.email
       }
-    })
-
+    });
   } catch (err) {
-
     return res.status(401).json({
-      error: "Could not sign in"
-    })
-
+      error: 'Could not sign in'
+    });
   }
-}
+};
 
 const signout = (req, res) => {
-  res.clearCookie("t");
+  res.clearCookie('t');
   return res.status('200').json({
-    message: "signed out"
+    message: 'signed out'
   });
-}
+};
 
 const requireSignin = expressjwt({
   secret: config.jwtSecret,
-  algorithms: ["HS256"],
+  algorithms: ['HS256'],
   userProperty: 'auth'
-})
+});
 
 const hasAuthorization = (req, res, next) => {
   const authorized = req.profile && req.auth && req.profile._id == req.auth._id;
-  console.log('Duviel:', authorized);
-  if (!(authorized)) {
+
+  if (!authorized) {
     return res.status(404).json({
-      error: "User is not authorized"
-    })
+      error: 'User is not authorized'
+    });
   }
-  next()
-}
+  next();
+};
 
 export default {
   signin,
   signout,
   requireSignin,
   hasAuthorization
-}
+};

@@ -1,7 +1,18 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {create} from './api-user';
-import { Button, Card, CardActions, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Icon, TextField, Typography, makeStyles } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Icon from '@material-ui/core/Icon';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import {makeStyles} from '@material-ui/core';
+import {Link} from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -27,22 +38,21 @@ const useStyles = makeStyles(theme => ({
     margin: 'auto',
     marginBottom: theme.spacing(2)
   }
-}))
+}));
 
 const Signup = () => {
   const classes = useStyles();
 
+  const [open, setOpen] = useState(false);
   const [values, setValues] = useState({
     name: '',
     password: '',
     email: '',
-    open: false,
     error: ''
   });
 
   const handleChange = name => event => {
-
-    setValues({ ...values, [name]: event.target.value })
+    setValues({ ...values, [name]: event.target.value });
   };
 
   const clickSubmit = () => {
@@ -58,9 +68,8 @@ const Signup = () => {
       } else {
         setValues({ ...values, error: '', open: true });
       }
-
-    })
-  }
+    });
+  };
 
   return (
     <>
@@ -107,7 +116,7 @@ const Signup = () => {
           <Button color='primary' variant='contained' onClick={clickSubmit}>Sign up</Button>
         </CardActions>
       </Card>
-      <Dialog open={values.open} onClose={(reason) => {
+      <Dialog open={open} onClose={(reason) => {
         if(reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
           setOpen(false);
         }
@@ -126,7 +135,6 @@ const Signup = () => {
       </Dialog>
     </>
   );
-
-}
+};
 
 export default Signup;

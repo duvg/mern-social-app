@@ -7,7 +7,7 @@ import helmet from 'helmet';
 
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import {StaticRouter} from 'react-router-dom/server';
+import { StaticRouter } from 'react-router-dom/server';
 import MainRouter from './../client/MainRouter';
 
 import { ServerStyleSheets, ThemeProvider } from '@material-ui/styles';
@@ -22,7 +22,6 @@ import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 
 import Template from './../template';
-
 
 const CURRENT_WORKING_DIR = process.cwd();
 const app = express();
@@ -55,17 +54,19 @@ app.get('*', (req, res) => {
   }
 
   const css = sheets.toString();
-  res.status(200).send(Template({
-    markup,
-    css
-  }))
+  res.status(200).send(
+    Template({
+      markup,
+      css
+    })
+  );
 });
 
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
-    res.status(401).json({ "error": `${err.name}: ${err.message}`})
+    res.status(401).json({ error: `${err.name}: ${err.message}` });
   } else if (err) {
-    res.status(400).json({ "error": `${err.name}: ${err.message}`});
+    res.status(400).json({ error: `${err.name}: ${err.message}` });
     console.log(err);
   }
 });
