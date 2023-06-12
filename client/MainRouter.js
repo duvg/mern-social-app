@@ -24,7 +24,7 @@ const MainRouter = () => {
         <Route path='/users/:userId' Component={Profile}/>
       </Routes>
     </div>
-  )
+  );
 };
 
 

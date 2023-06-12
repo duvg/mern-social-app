@@ -6,14 +6,12 @@ import { Link } from 'react-router-dom';
 import auth from '../auth/auth-helper';
 
 const isActive = (location, path) => {
-  if (location.pathname == path)
-    return {color: '#ff4081'}
-  else
-    return {color: '#ffffff'}
-}
+  return location.pathname == path ? {color: '#ff4081'} : {color: '#ffffff'};
+};
 
 const Menu = () => {
   const location = useLocation();
+  const history = useNavigate();
   return (
     <AppBar position='static'>
       <Toolbar>
@@ -43,7 +41,7 @@ const Menu = () => {
                 My Profile
               </Button>
             </Link>
-            <Button color='inherit' onClick={() => { auth.clearJWT(() => location.push('/'))}}>Sign out</Button>
+            <Button color='inherit' onClick={() => { auth.clearJWT(() => history('/'))}}>Sign out</Button>
           </span>)
         }
       </Toolbar>

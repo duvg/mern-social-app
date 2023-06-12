@@ -6,7 +6,6 @@ import { Navigate } from 'react-router';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@material-ui/core';
 
-
 const DeleteUser = (props) => {
   const [open, setOpen] = useState(false);
   const [redirect, setRedirect] = useState(false);
@@ -17,7 +16,7 @@ const DeleteUser = (props) => {
 
   const handleRequestClose = () => {
     setOpen(false);
-  }
+  };
 
   if (redirect) {
     return <Navigate to={'/'}/>;
@@ -34,15 +33,15 @@ const DeleteUser = (props) => {
         auth.clearJWT(() => console.log('User deleted'));
         setRedirect(true);
       }
-    })
+    });
   };
   return (
     <span>
-      <IconButton aria-label='Delete' onClick={handleClick} color='secondary'>
-        <DeleteIcon/>
+      <IconButton aria-label='Delete' onClick={handleClick} >
+        <DeleteIcon color='error'/>
       </IconButton>
       <Dialog open={open} onClose={handleRequestClose}>
-        <DialogTitle>{"Delete account"}</DialogTitle>
+        <DialogTitle>{'Delete account'}</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Confirm to delete your account.
@@ -55,7 +54,7 @@ const DeleteUser = (props) => {
       </Dialog>
     </span>
   );
-}
+};
 
 DeleteUser.propTypes = {
   userId: PropTypes.string.isRequired

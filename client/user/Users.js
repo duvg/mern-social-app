@@ -11,8 +11,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import Person from '@material-ui/icons/Person';
-import { list } from './api-user';
-import { Link } from 'react-router-dom';
+import {list} from './api-user';
+import {Link} from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -40,15 +40,15 @@ const Users = () => {
 
     list(signal).then((data) => {
       if (data && data.error) {
-        console.log('Error::: ', error);
+        console.log('Error::: ', data.error);
       } else {
-        setUsers(data)
+        setUsers(data);
       }
-    })
+    });
 
     return () => {
       abortController.abort();
-    }
+    };
   }, []);
 
   return (
@@ -58,7 +58,7 @@ const Users = () => {
       </Typography>
       <List dense>
         {users.map((item) => {
-          return <Link to={"/users/" + item._id} key={item._id}>
+          return <Link to={'/users/' + item._id} key={item._id}>
             <ListItem button>
               <ListItemAvatar>
                 <Avatar>
@@ -72,7 +72,7 @@ const Users = () => {
                 </IconButton>
               </ListItemSecondaryAction>
             </ListItem>
-          </Link>
+          </Link>;
         })}
       </List>
     </Paper>

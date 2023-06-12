@@ -24,17 +24,15 @@ const list = async (signal) => {
   } catch (err) {
     console.log('Err::: ', err);
   }
-}
+};
 
 const read = async (params, credentials, signal) => {
-  console.log(credentials);
   try {
     let response = await fetch('/api/users/' + params.userId, {
       method: 'GET',
       signal: signal,
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + credentials.token
       }
     });
@@ -42,24 +40,22 @@ const read = async (params, credentials, signal) => {
   } catch (err) {
     console.log('Err::: ', err);
   }
-}
+};
 
 const update = async (params, credentials, user) => {
   try {
-    let response = await fetch('/api/users/' + params.id, {
+    let response = await fetch('/api/users/' + params.userId, {
       method: 'PUT',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + credentials.t
+        'Authorization': 'Bearer ' + credentials.token
       },
-      body: JSON.stringify(user)
+      body: user
     });
     return await response.json();
   } catch (err) {
     console.log('Err:::', err);
   }
-}
+};
 
 const remove = async (params, credentials) => {
   try {
@@ -75,7 +71,7 @@ const remove = async (params, credentials) => {
   } catch (err) {
     console.log('Err:::', err);
   }
-}
+};
 
 export {
   create,
