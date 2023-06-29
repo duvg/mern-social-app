@@ -109,6 +109,7 @@ const Signup = () => {
           {
             values.error && (<Typography component="p" color="error">
               <Icon color='error' className={classes.error}>error</Icon>
+              {values.error}
             </Typography>)
           }
         </CardContent>

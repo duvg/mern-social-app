@@ -21,6 +21,8 @@ import {Link} from 'react-router-dom';
 import moment from 'moment';
 import DeleteUser from './DeleteUser';
 import theme from '../theme';
+import FollowProfileButton from './FollowProfileButton';
+import ProfileTabs from './ProfileTab';
 
 
 const useStyles = makeStyles(theme => ({
@@ -42,17 +44,25 @@ const Profile = () => {
     const classes = useStyles();
     const {userId} = useParams();
     const [values, setValues] = useState({
-        user: {}
+        user: {following: [], followers: []},
+        following: false
     });
     const [user, setUser] = useState({});
     const [userPicture, setUserpicture] = useState({});
 
     const [redirectToSignin, setRedirectToSignin] = useState(false);
+    const jwt = auth.isAuthenticated();
+
+    const checkFollow = (user) => {
+      const match = user.followers.some((follower) => {
+        return follower._id == jwt.user._id;
+      });
+      return match;
+    };
 
     useEffect(() => {
         const abortController = new AbortController();
         const signal = abortController.signal;
-        const jwt = auth.isAuthenticated();
 
         read({
             userId: userId
@@ -61,7 +71,8 @@ const Profile = () => {
                 setRedirectToSignin(true);
             } else {
                 setUser(data);
-                setValues({...values, user: data});
+                let following = checkFollow(data);
+                setValues({...values, user: data, following: following});
             }
         });
 
@@ -73,9 +84,25 @@ const Profile = () => {
             abortController.abort();
         };
     }, [userId]);
+
     const photoUrl = values.user._id
         ? `/api/users/photo/${values.user._id}?${new Date().getTime()}`
         : '/api/users/defaultphoto';
+
+    const   clickFollowButton = (callApi) => {
+      callApi({
+        userId: jwt.user._id
+      }, {
+        t: jwt.token
+      }, values.user._id).then((data) => {
+        if (data.error) {
+          setValues({...values, error: data.error});
+        } else {
+          setValues({...values, user: data, following:!values.following});
+        }
+      });
+    };
+
     return (
         <Paper className={classes.root} elevation={4}>
             <Typography variant='h6' className={classes.title}>
@@ -90,7 +117,7 @@ const Profile = () => {
                     </ListItemAvatar>
                     <ListItemText primary={user.name} secondary={user.email}/>
                     {
-                        auth.isAuthenticated().user && auth.isAuthenticated().user._id === user._id &&
+                        auth.isAuthenticated().user && auth.isAuthenticated().user._id === user._id ?
                         (
                             <ListItemSecondaryAction>
                                 <Link to={'/users/edit/' + user._id}>
@@ -100,8 +127,9 @@ const Profile = () => {
                                 </Link>
                                 <DeleteUser userId={user._id} color="secondary"/>
                             </ListItemSecondaryAction>
-                        )
+                        ): (<FollowProfileButton following={values.following} onButtonClick={clickFollowButton} />)
                     }
+
                 </ListItem>
                 <Divider/>
                 <ListItem>
@@ -110,6 +138,7 @@ const Profile = () => {
                         secondary={'Joined: ' + (moment(user.created).format('MMMM Do YYYY, h:mm:ss a'))}></ListItemText>
                 </ListItem>
             </List>
+            <ProfileTabs user={values.user}/>
         </Paper>
     );
 };

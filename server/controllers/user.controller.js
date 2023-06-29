@@ -14,7 +14,7 @@ const create = async (req, res) => {
       message: 'Successfully signed up!'
     });
   } catch (err) {
-    return res.status(400).json({
+    return res.status(409).json({
       error: errorHandler.getErrorMessage(err)
     });
   }
@@ -32,10 +32,12 @@ const list = async (req, res) => {
 };
 
 const userById = async (req, res, next, id) => {
-  console.log('the requested id ', id);
   try {
-    console.log('id sended', id);
-    let user = await User.findById({ _id: id });
+    let user = await User.findById({ _id: id })
+      .populate('following', '_id name')
+      .populate('followers', '_id name')
+      .exec();
+
     if (!user) {
       return res.status(400).json({
         error: `User not found ${id}`
@@ -44,7 +46,6 @@ const userById = async (req, res, next, id) => {
     req.profile = user;
     next();
   } catch (err) {
-    console.log(err);
     return res.status(400).json({
       error: 'Could not retrieve user'
     });
@@ -87,7 +88,6 @@ const update = async (req, res) => {
 
       res.json({ user });
     } catch (err) {
-      console.log(err);
       return res.status(400).json({
         error: errorHandler.getErrorMessage('error', err)
       });
@@ -121,6 +121,59 @@ const defaultPhoto = (req, res) => {
   return res.sendFile(`${process.cwd()}${defaultImage}`);
 };
 
+const addFollowing = async (req, res, next) => {
+  try {
+    await User.findByIdAndUpdate(req.body.userId, { $push: { following: req.body.followId } });
+    next();
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err)
+    });
+  }
+};
+
+const addFollower = async (req, res) => {
+  try {
+    let result = await User.findByIdAndUpdate(req.body.userId, { $push: { followers: req.body.userId } }, { new: true })
+      .populate('following', '_id name')
+      .populate('followers', '_is name')
+      .exec();
+    result.hashed_password = undefined;
+    result.salt = undefined;
+    res.json(result);
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err)
+    });
+  }
+};
+
+const removeFollowing = async (req, res, next) => {
+  try {
+    await User.findByIdAndUpdate(req.body.userId, { $pull: { following: req.body.unfollowID } });
+    next();
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage()
+    });
+  }
+};
+
+const removeFollower = async (req, res) => {
+  try {
+    let result = User.findByIdAndUpdate(req.body.userId, { $pull: { followers: req.body.uerId } }, { new: true })
+      .populate('following', '_id name')
+      .populate('followers', '_id name');
+    result.hashed_password = undefined;
+    result.salt = undefined;
+    res.json(result);
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage()
+    });
+  }
+};
+
 export default {
   create,
   list,
@@ -129,5 +182,9 @@ export default {
   userById,
   update,
   photo,
-  defaultPhoto
+  defaultPhoto,
+  addFollower,
+  addFollowing,
+  removeFollowing,
+  removeFollower
 };

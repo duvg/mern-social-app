@@ -53,6 +53,10 @@ app.get('*', (req, res) => {
     return res.redirect(303, context.url);
   }
 
+  app.get('/url', (req, res, next) => {
+    res.json(['Tony', 'Lisa', 'Michael', 'Ginger', 'Food']);
+  });
+
   const css = sheets.toString();
   res.status(200).send(
     Template({
