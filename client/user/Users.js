@@ -43,6 +43,8 @@ const Users = () => {
         console.log('Error::: ', data.error);
       } else {
         setUsers(data);
+
+        console.log(users);
       }
     });
 
@@ -51,6 +53,13 @@ const Users = () => {
     };
   }, []);
 
+  console.log(users[0]);
+  let user1 = users[0];
+  if (user1) {
+    console.log(user1.name);
+    user1.name = 'se cambio el nombre';
+    console.log(user1.name);
+  }
   return (
     <Paper className={classes.root} elevation={4}>
       <Typography variant="h6" className={classes.title}>
