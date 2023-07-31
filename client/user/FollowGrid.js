@@ -1,7 +1,7 @@
-import React from 'react';
-import { PropTypes } from 'prop-types';
-import { Avatar, GridList, GridListTile, Typography, makeStyles } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import { PropTypes } from 'prop-types'
+import { Avatar, GridList, GridListTile, Typography, makeStyles } from '@material-ui/core'
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,10 +25,10 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     marginTop: 10
   }
-}));
+}))
 
 const FollowGrid = (props) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={classes.root}>
@@ -43,15 +43,15 @@ const FollowGrid = (props) => {
                 </Typography>
               </Link>
             </GridListTile>
-          );
+          )
         })}
       </GridList>
     </div>
-  );
-};
+  )
+}
 
 FollowGrid.propTypes = {
   people: PropTypes.array.isRequired
-};
+}
 
-export default FollowGrid;
+export default FollowGrid
