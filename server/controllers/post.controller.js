@@ -106,9 +106,9 @@ const like = async (req, res) => {
 const unlike = async (req, res) => {
   try {
     let result = await Post.findByIdAndUpdate(req.body.postId,
-        { $push: {likes: req.body.userId}},
+        { $pull: { likes: req.body.userId }},
         { new: true })
-    res.result(200).json(result);
+    res.status(200).json(result);
   } catch (err) {
     return res.status(400).json({
       error: errorHandler.getErrorMessage(err)
@@ -125,16 +125,17 @@ const comment = async (req, res) => {
         { new: true })
       .populate('comments.postedBy', '_id name')
       .populate('postedBy', '_id name')
-      exec()
+      .exec()
     res.status(200).json(result)
   } catch (err) {
     return res.status(400).json({
-      error: errorHandler.getErrorMessage(err)
+      error: errorHandler.getErrorMessage(err),
+      'dest': 'desd'
     })
   }
 }
 
-const uncomment = async (res, req) => {
+const uncomment = async (req, res) => {
   let comment = req.body.comment
   try {
     let result = await Post.findByIdAndUpdate(req.body.postId,

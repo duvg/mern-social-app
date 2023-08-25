@@ -72,7 +72,7 @@ const remove = async (params, credentials) => {
 
 const like = async (params, credentials, postId) => {
   try {
-    let response = await fetch('(api/post/like/', {
+    let response = await fetch('/api/posts/like/', {
       method: 'PUT',
       headers: {
         'Accept': 'appliction/json',
@@ -82,20 +82,21 @@ const like = async (params, credentials, postId) => {
       body: JSON.stringify({userId: params.userId, postId: postId})
     })
 
-    return await response.jsong()
+    return await response.json()
   } catch (err) {
     console.log(err)
   }
 }
 
 const unlike = async (params, credentials, postId) => {
+  console.log(credentials.t);
   try {
     let response = await fetch('/api/posts/unlike/', {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization':`Bearer ${creadentials.t}`
+        'Authorization':`Bearer ${credentials.t}`
       },
       body: JSON.stringify({ userId: params.userId, postId: postId})
     })
@@ -108,15 +109,20 @@ const unlike = async (params, credentials, postId) => {
 
 
 const comment = async (params, credentials, postId, comment) => {
+  const body  = {
+    userId: params.userId,
+    postId: postId,
+    comment: comment
+  };
   try {
     let response = await fetch('/api/posts/comment', {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${credentials.t}`,
-        body: JSON.stringify({userId: params.userId, postId: postId, comment: comment })
-      }
+        'Authorization': `Bearer ${credentials.t}`
+      },
+      body: JSON.stringify(body)
     })
 
     return await response.json()
@@ -126,16 +132,24 @@ const comment = async (params, credentials, postId, comment) => {
 }
 
 const uncomment = async (params, credentials, postId, comment) => {
+
+  const body = {
+    userId: params.userId,
+    postId: postId,
+    comment: comment
+  }
+
   try {
-    let response = await fetch('/api/post/uncomment/', {
+    let response = await fetch('/api/posts/uncomment/', {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Authorization': `Bearer ${credentials.t}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({userId: params.userId, postId: postId, comment: comment})
+      body: JSON.stringify(body)
     })
+    return await response.json()
   } catch (err) {
     console.log(err);
   }

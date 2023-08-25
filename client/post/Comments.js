@@ -30,12 +30,12 @@ const useStyles = makeStyles(theme => ({
     display: 'block',
     color: 'gray',
     fontSize: '0.8em'
- },
- commentDelete: {
-   fontSize: '1.6em',
-   verticalAlign: 'middle',
-   cursor: 'pointer'
- }
+  },
+  commentDelete: {
+    fontSize: '1.6em',
+    verticalAlign: 'middle',
+    cursor: 'pointer'
+  }
 }))
 
 export default function Comments (props) {
@@ -46,13 +46,12 @@ export default function Comments (props) {
     setText(event.target.value)
   }
   const addComment = (event) => {
+    const params = { userId: jwt.user._id }
+    const credentials = { t: jwt.token }
+
     if(event.keyCode == 13 && event.target.value){
       event.preventDefault()
-      comment({
-        userId: jwt.user._id
-      }, {
-        t: jwt.token
-      }, props.postId, {text: text}).then((data) => {
+      comment(params, credentials, props.postId, {text: text}).then((data) => {
         if (data.error) {
           console.log(data.error)
         } else {
@@ -64,11 +63,9 @@ export default function Comments (props) {
   }
 
   const deleteComment = comment => event => {
-    uncomment({
-      userId: jwt.user._id
-    }, {
-      t: jwt.token
-    }, props.postId, comment).then((data) => {
+    const params = { userId: jwt.user._id }
+    const credentials = { t: jwt.token }
+    uncomment(params , credentials, props.postId, comment).then((data) => {
       if (data.error) {
         console.log(data.error)
       } else {
