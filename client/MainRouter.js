@@ -9,6 +9,7 @@ import EditProfile from './user/EditProfile'
 import PrivateRoute from './auth/PrivateRoute'
 import Menu from './core/Menu'
 import FindPeople from './user/FindPeople'
+import Newsfeed from './post/Newsfeed'
 
 const MainRouter = () => {
   return (
@@ -24,6 +25,7 @@ const MainRouter = () => {
         </Route>
         <Route path='/users/:userId' Component={Profile} />
         <Route path='/users/findpeople/:userId' Component={FindPeople} />
+        <Route path='/posts' Component={Newsfeed} />
       </Routes>
     </div>
   )

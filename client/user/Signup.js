@@ -63,10 +63,12 @@ const Signup = () => {
     };
 
     create(user).then((data) => {
+      console.log('register response::: ', data);
       if(data.error) {
         setValues({ ...values, error: data.error });
       } else {
-        setValues({ ...values, error: '', open: true });
+        setValues({ ...values, error: '' });
+        setOpen(true);
       }
     });
   };

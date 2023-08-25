@@ -36,7 +36,7 @@ const FollowGrid = (props) => {
         {props.people.map((person, i) => {
           return (
             <GridListTile style={{ height: 120 }} key={i}>
-              <Link to={'/user' + person._id}>
+              <Link to={'/users/' + person._id}>
                 <Avatar src={'/api/users/photo/' + person._id} className={classes.bigAvatar} />
                 <Typography className={classes.tileText}>
                   {person.name}

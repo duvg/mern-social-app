@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { follow, unfollow } from './api-user'
 import { Button } from '@material-ui/core'
+import size from 'lodash';
 
 const FollowProfileButton = (props) => {
   const followClick = () => {
