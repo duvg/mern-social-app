@@ -1,78 +1,80 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import compress from 'compression';
-import cors from 'cors';
-import helmet from 'helmet';
+import express from 'express'
+import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
+import compress from 'compression'
+import cors from 'cors'
+import helmet from 'helmet'
 
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom/server';
-import MainRouter from './../client/MainRouter';
+import React from 'react'
+import ReactDOMServer from 'react-dom/server'
+import { StaticRouter } from 'react-router-dom/server'
+import MainRouter from './../client/MainRouter'
 
-import { ServerStyleSheets, ThemeProvider } from '@material-ui/styles';
-import theme from './../client/theme';
+import { ServerStyleSheets, ThemeProvider } from '@material-ui/styles'
+import theme from './../client/theme'
 
-import path from 'path';
+import path from 'path'
 
-import devBundle from './devBundle';
+import devBundle from './devBundle'
 
 // Routes
-import authRoutes from './routes/auth.routes';
-import userRoutes from './routes/user.routes';
+import authRoutes from './routes/auth.routes'
+import userRoutes from './routes/user.routes'
+import postRoutes from './routes/post.routes'
 
-import Template from './../template';
+import Template from './../template'
 
-const CURRENT_WORKING_DIR = process.cwd();
-const app = express();
-devBundle.compile(app);
+const CURRENT_WORKING_DIR = process.cwd()
+const app = express()
+devBundle.compile(app)
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(compress());
-app.use(helmet());
-app.use(cors());
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use(compress())
+app.use(helmet())
+app.use(cors())
 
-app.use('/dist', express.static(path.join(CURRENT_WORKING_DIR, 'dist')));
-app.use('/', authRoutes);
-app.use('/', userRoutes);
+app.use('/dist', express.static(path.join(CURRENT_WORKING_DIR, 'dist')))
+app.use('/', authRoutes)
+app.use('/', userRoutes)
+app.use('/', postRoutes)
 
 app.get('*', (req, res) => {
-  const sheets = new ServerStyleSheets();
-  const context = {};
+  const sheets = new ServerStyleSheets()
+  const context = {}
   const markup = ReactDOMServer.renderToString(
     <StaticRouter location={req.url} context={context}>
       <ThemeProvider theme={theme}>
         <MainRouter />
       </ThemeProvider>
     </StaticRouter>
-  );
+  )
 
   if (context.url) {
-    return res.redirect(303, context.url);
+    return res.redirect(303, context.url)
   }
 
-  app.get('/url', (req, res, next) => {
-    res.json(['Tony', 'Lisa', 'Michael', 'Ginger', 'Food']);
-  });
+  app.get('/url', (req, res,next) => {
+    res.json(['Tony', 'Lisa', 'Michael', 'Ginger', 'Food'])
+  })
 
-  const css = sheets.toString();
+  const css = sheets.toString()
   res.status(200).send(
     Template({
       markup,
       css
     })
-  );
-});
+  )
+})
 
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
-    res.status(401).json({ error: `${err.name}: ${err.message}` });
+    res.status(401).json({ error: `${err.name}: ${err.message}` })
   } else if (err) {
-    res.status(400).json({ error: `${err.name}: ${err.message}` });
-    console.log(err);
+    res.status(400).json({ error: `${err.name}: ${err.message}` })
+    console.log(err)
   }
-});
+})
 
-export default app;
+export default app

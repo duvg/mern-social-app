@@ -134,9 +134,9 @@ const addFollowing = async (req, res, next) => {
 
 const addFollower = async (req, res) => {
   try {
-    const result = await User.findByIdAndUpdate(req.body.userId, { $push: { followers: req.body.userId } }, { new: true })
+    const result = await User.findByIdAndUpdate(req.body.followId, { $push: { followers: req.body.userId } }, { new: true })
       .populate('following', '_id name')
-      .populate('followers', '_is name')
+      .populate('followers', '_id name')
       .exec()
     result.hashed_password = undefined
     result.salt = undefined
@@ -153,6 +153,7 @@ const removeFollowing = async (req, res, next) => {
     await User.findByIdAndUpdate(req.body.userId, { $pull: { following: req.body.unfollowID } })
     next()
   } catch (err) {
+    console.log()
     return res.status(400).json({
       error: errorHandler.getErrorMessage()
     })
@@ -160,12 +161,13 @@ const removeFollowing = async (req, res, next) => {
 }
 
 const removeFollower = async (req, res) => {
+  console.log('server body', req.body);
   try {
-    const result = User.findByIdAndUpdate(req.body.userId, { $pull: { followers: req.body.uerId } }, { new: true })
+    const result = await User.findByIdAndUpdate(req.body.unfollowId, { $pull: { followers: req.body.userId } }, { new: true })
       .populate('following', '_id name')
       .populate('followers', '_id name')
-    result.hashed_password = undefined
-    result.salt = undefined
+      .exec()
+    console.log('server result', result);
     res.json(result)
   } catch (err) {
     return res.status(400).json({
@@ -178,7 +180,7 @@ const findPeople = async (req, res) => {
   const following = req.profile.following
   following.push(req.profile._id)
   try {
-    const users = await User.find({_id: { $nin: following } }).select('name')
+    const users = await User.find({ _id: { $nin: following } }).select('name')
     res.json(users)
   } catch (err) {
     return res.status(400).json({
